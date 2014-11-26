@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+var url = require('url');
+var argv = process.argv;
+
+if (argv.length !== 5) {
+    console.error('Usage:');
+    console.error('\tudp-portal server udp://ip:port tcp://localhost:port');
+    console.error('\tudp-portal client tcp://portal-host:port udp://ip:port');
+    return process.exit(1);
+}
+
+var Client = require('../client');
+var Server = require('../server');
+
+var command = argv[2];
+var uri1 = url.parse(argv[3]);
+var uri2 = url.parse(argv[4]);
+
+switch(command) {
+case 'server':
+    var server = Server(uri1);
+    server.listen(uri2.port, function() {
+    });
+    break;
+case 'client':
+    var client = Client(uri1, uri2);
+    break;
+default:
+    console.error('Usage:');
+    console.error('\tudp-portal server udp://ip:port tcp://localhost:port');
+    console.error('\tudp-portal client tcp://portal-host:port udp://ip:port');
+    process.exit(1);
+}

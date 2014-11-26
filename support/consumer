@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+var url = require('url');
+var dgram = require('dgram');
+
+var uri = url.parse(process.argv[2]);
+var ip = uri.hostname;
+var port = uri.port;
+
+var socket = dgram.createSocket('udp4');
+socket.bind(port, function() {
+    socket.addMembership(ip);
+
+    socket.on('message', function(msg) {
+        console.log(msg.toString());
+    });
+});
+

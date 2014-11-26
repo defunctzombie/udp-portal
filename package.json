@@ -1,0 +1,29 @@
+{
+  "name": "udp-portal",
+  "version": "0.0.0",
+  "description": "tunnel udp traffic over tcp",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --ui qunit --reporter list --check-leaks --bail -- test/index.js"
+  },
+  "bin": {
+    "udp-portal": "bin/udp-portal"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/defunctzombie/udp-portal.git"
+  },
+  "keywords": [
+    "udp",
+    "tunnel"
+  ],
+  "author": "Roman Shtylman <shtylman@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/defunctzombie/udp-portal/issues"
+  },
+  "homepage": "https://github.com/defunctzombie/udp-portal",
+  "devDependencies": {
+    "mocha": "2.0.1"
+  }
+}
