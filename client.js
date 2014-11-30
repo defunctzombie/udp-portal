@@ -8,9 +8,20 @@ module.exports = function(uri, rebroadcast_uri) {
 
     uri = url.parse(uri);
 
-    var server = net.connect(uri.port, uri.hostname);
+    var client = net.connect(uri.port, uri.hostname);
 
-    server.on('error', function(err) {
+    client.on('connect', function() {
+        console.log('connected to ' + url.format(uri));
+    });
+
+    client.on('close', function() {
+        console.error('connection to ' + url.format(uri) + ' lost, reconnecting');
+        setTimeout(function() {
+            client.connect(uri.port, uri.hostname);
+        }, 1000);
+    })
+
+    client.on('error', function(err) {
         ee.emit('error', err);
     });
 
@@ -18,7 +29,7 @@ module.exports = function(uri, rebroadcast_uri) {
     var current_size = 0;
     var current_offset = 0;
 
-    server.on('data', function(chunk) {
+    client.on('data', function(chunk) {
 
         var read_offset = 0;
 
@@ -55,9 +66,9 @@ module.exports = function(uri, rebroadcast_uri) {
     });
 
     ee.close = function(done) {
-        server.once('end', done);
+        client.once('end', done);
         ee.removeAllListeners();
-        server.end();
+        client.end();
     };
 
     if (!rebroadcast_uri) {
