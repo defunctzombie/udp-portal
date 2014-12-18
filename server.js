@@ -14,6 +14,11 @@ var Server = function(uri) {
 
     self.udp = dgram.createSocket('udp4');
     self.udp.bind(self.uri.port, function(err) {
+        if (err) {
+            console.error(err.stack);
+            return process.exit(1);
+        }
+
         self.udp.addMembership(self.uri.hostname);
     });
 };
@@ -31,9 +36,18 @@ Server.prototype.listen = function(port, cb) {
         };
 
         self.udp.on('message', handler);
-        socket.once('close', function() {
+        socket.on('close', function() {
             self.udp.removeListener('message', handler);
         });
+
+        socket.on('error', function(err) {
+            console.error('client connection error', err.stack);
+        });
+    });
+
+    self.server.on('error', function(err) {
+        console.error(err.stack);
+        return process.exit(1);
     });
 };
 

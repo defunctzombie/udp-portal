@@ -12,6 +12,11 @@ if (argv.length !== 5) {
 var Client = require('../client');
 var Server = require('../server');
 
+process.on('uncaughtException', function(err) {
+    console.error(err.stack);
+    process.exit(1);
+});
+
 var command = argv[2];
 var uri1 = url.parse(argv[3]);
 var uri2 = url.parse(argv[4]);
