@@ -29,6 +29,11 @@ case 'server':
     break;
 case 'client':
     var client = Client(uri1, uri2);
+
+    client.on('error', function(err) {
+        console.error(err);
+    });
+
     break;
 default:
     console.error('Usage:');

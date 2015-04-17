@@ -10,18 +10,29 @@ module.exports = function(uri, rebroadcast_uri) {
 
     var client = net.connect(uri.port, uri.hostname);
 
+    var connected = false;
+
     client.on('connect', function() {
         console.log('connected to ' + url.format(uri));
+        connected = true;
     });
 
     client.on('close', function() {
-        console.error('connection to ' + url.format(uri) + ' lost, reconnecting');
+        if (connected) {
+            console.error('connection to ' + url.format(uri) + ' lost, reconnecting');
+        }
+
+        connected = false;
         setTimeout(function() {
             client.connect(uri.port, uri.hostname);
         }, 1000);
     })
 
     client.on('error', function(err) {
+        if (err.code === 'ECONNREFUSED') {
+            return;
+        }
+
         ee.emit('error', err);
     });
 
