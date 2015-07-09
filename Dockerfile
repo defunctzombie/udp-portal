@@ -1,12 +1,10 @@
-FROM node:0.10.33
-MAINTAINER Roman Shtylman <shtylman@gmail.com>
+FROM mhart/alpine-node:0.10.39
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /src
 
-ADD package.json /usr/src/app/
+ADD package.json /src/
 RUN npm install --production
 
-ADD . /usr/src/app
+ADD . /src
 
 ENTRYPOINT ["bin/udp-portal"]
